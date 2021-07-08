@@ -2,7 +2,12 @@
 
 import axios from "axios";
 
-axios.get(`https://viacep.com.br/ws/13340200/json`)
+const readlineSync = require('readline-sync'); //importa readline-sync
+
+const cep = readlineSync.question('Informe seu CEP: ');
+
+axios.get(`https://viacep.com.br/ws/${cep}/json`)
     .then(response => {
         console.log(response.data);
     })
+
