@@ -27,16 +27,38 @@ const apiKey = "ab7cd525f6439d9f2b334f65";
 
 // getCurrent();
 
-async function getData() {
-  const response = await api.get(`${apiKey}/latest/USD`);
+async function getData(currency = 'USD') {
+  const response = await api.get(`${apiKey}/latest/${currency}`);
   const { data } = response;
-  return Object.keys(data.conversion_rates);
+  return data.conversion_rates;
 }
 
-async function showDate() {
-  const amount = readlineSync.question("Informe a moeda a ser convertida: ").toUpperCase();
-  const teste = await getData();
-  console.log(teste.includes(amount));
+async function validateCurrency(currency) {
+  const data = Object.keys(await getData());
+  return data.includes(currency)
+
+  // let currencies = [];
+  // currencies.push(readlineSync.question(`Informe a 1ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase());
+  // const data = await getData()
+  // const allCurrencies = Object.keys(await getData(currencies[0]));
+  // const amount = readlineSync.question('Informe a quantidade a ser convertida: ')
+  // // for (let index = 0; index < 2; index++) {
+  // //   const currency = readlineSync.question(`Informe a ${index + 1}ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
+  // //   teste.includes(currency) ? currencies.push(currency) : index--
+  // // }
+  // console.log(`${amount} ${currencies[0]} equivale á XX ${currencies[1]}`)
 }
 
-showDate();
+async function getInformations() {
+  let currency;
+  const amount = readlineSync.question('Quantidade a ser convertida: ')
+  while(!await validateCurrency(currency)) {
+    currency = readlineSync.question(`Informe a 1ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
+  }
+  const currency2 = readlineSync.question(`Informe a 2ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
+  const result = await api.get(`${apiKey}/pair/${currency}/${currency2}/${amount}`)
+  const { data } = result
+  console.log(data.conversion_result.toFixed(2))
+}
+
+getInformations()
