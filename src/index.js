@@ -1,56 +1,33 @@
 #! /usr/bin/env node
 
-import api from "../service/api";
+import getResult from "../controllers/Result";
+import showCurrencies from "../controllers/ShowCurrencies";
+import validateCurrency from "../controllers/Validate";
 
 const readlineSync = require("readline-sync");
 
-const apiKey = "ab7cd525f6439d9f2b334f65";
-
-async function getData(currency = "USD") {
-  const response = await api.get(`${apiKey}/latest/${currency}`);
-  const { data } = response;
-  return Object.keys(data.conversion_rates);
-}
-
-async function getTeste() {
-  const data = await getData();
-  console.log("Lista de moedas disponíveis para conversão: \n");
-  console.log(data.join(" - ") + '\n');
-};
-
-async function validateCurrency(currency) {
-  const data = await getData();
-  return data.includes(currency);
-}
-
 async function getCurrency() {
-  await getTeste()
+  await showCurrencies();
   const currencies = [];
   for (let index = 0; index < 2; index++) {
     while (!(await validateCurrency(currencies[index]))) {
       const currency = readlineSync
-        .question(
-          `Informe a ${index + 1}ª moeda a ser convertida: `
-        )
+        .question(`Informe a ${index + 1}ª moeda a ser convertida: `)
         .toUpperCase();
       if (await validateCurrency(currency)) {
         currencies.push(currency);
       } else {
-        console.log("Moeda não encontrada!");
+        console.log("Moeda não encontrada!\n");
       }
     }
   }
   let amount;
-  while (isNaN(amount * 1)) {
+  while (isNaN(amount)) {
     amount = readlineSync.question("Quantidade a ser convertida: ");
+    amount = amount.replace(",", ".");
+    console.log(isNaN(amount) ? "Informe um valor válido\n" : "");
   }
-  getResult(currencies[0], currencies[1], amount)
+  getResult(currencies[0], currencies[1], amount);
 }
 
-async function getResult(currencyOne, currencyTwo , amount) {
-  const result = await api.get(`${apiKey}/pair/${currencyOne}/${currencyTwo}/${amount}`);
-  const { data } = result;
-  console.log(data.conversion_result.toFixed(2));
-}
-
-getCurrency()
+getCurrency();
