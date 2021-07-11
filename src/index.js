@@ -6,59 +6,51 @@ const readlineSync = require("readline-sync");
 
 const apiKey = "ab7cd525f6439d9f2b334f65";
 
-// const animals = ['USD', 'AUD', 'BGN', 'CAD', 'CHF', 'CNY', 'EGP', 'EUR', 'GBP'],
-// index = readlineSync.keyInSelect(animals, 'Which animal?');
-// const country = animals[index]
-
-// const amount = readlineSync.question('Informe a quantidade a ser convertida: ');
-
-// api.get(`${apiKey}/pair/${country}/GBP/${amount}`)
-//     .then(response => {
-//         const { data } = response
-//         console.log(data.conversion_result);
-//     })
-
-// const getCurrent = async () => {
-//   api.get(`${apiKey}/latest/USD`).then((response) => {
-//     const { data } = response;
-//     return Object.keys(data.conversion_rates)
-//   });
-// };
-
-// getCurrent();
-
-async function getData(currency = 'USD') {
+async function getData(currency = "USD") {
   const response = await api.get(`${apiKey}/latest/${currency}`);
   const { data } = response;
-  return data.conversion_rates;
+  return Object.keys(data.conversion_rates);
 }
+
+async function getTeste() {
+  const data = await getData();
+  console.log("Lista de moedas disponíveis para conversão: \n");
+  console.log(data.join(" - ") + '\n');
+};
 
 async function validateCurrency(currency) {
-  const data = Object.keys(await getData());
-  return data.includes(currency)
-
-  // let currencies = [];
-  // currencies.push(readlineSync.question(`Informe a 1ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase());
-  // const data = await getData()
-  // const allCurrencies = Object.keys(await getData(currencies[0]));
-  // const amount = readlineSync.question('Informe a quantidade a ser convertida: ')
-  // // for (let index = 0; index < 2; index++) {
-  // //   const currency = readlineSync.question(`Informe a ${index + 1}ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
-  // //   teste.includes(currency) ? currencies.push(currency) : index--
-  // // }
-  // console.log(`${amount} ${currencies[0]} equivale á XX ${currencies[1]}`)
+  const data = await getData();
+  return data.includes(currency);
 }
 
-async function getInformations() {
-  let currency;
-  const amount = readlineSync.question('Quantidade a ser convertida: ')
-  while(!await validateCurrency(currency)) {
-    currency = readlineSync.question(`Informe a 1ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
+async function getCurrency() {
+  await getTeste()
+  const currencies = [];
+  for (let index = 0; index < 2; index++) {
+    while (!(await validateCurrency(currencies[index]))) {
+      const currency = readlineSync
+        .question(
+          `Informe a ${index + 1}ª moeda a ser convertida: `
+        )
+        .toUpperCase();
+      if (await validateCurrency(currency)) {
+        currencies.push(currency);
+      } else {
+        console.log("Moeda não encontrada!");
+      }
+    }
   }
-  const currency2 = readlineSync.question(`Informe a 2ª moeda a ser convertida (BRL, EUR, USD): `).toUpperCase();
-  const result = await api.get(`${apiKey}/pair/${currency}/${currency2}/${amount}`)
-  const { data } = result
-  console.log(data.conversion_result.toFixed(2))
+  let amount;
+  while (isNaN(amount * 1)) {
+    amount = readlineSync.question("Quantidade a ser convertida: ");
+  }
+  getResult(currencies[0], currencies[1], amount)
 }
 
-getInformations()
+async function getResult(currencyOne, currencyTwo , amount) {
+  const result = await api.get(`${apiKey}/pair/${currencyOne}/${currencyTwo}/${amount}`);
+  const { data } = result;
+  console.log(data.conversion_result.toFixed(2));
+}
+
+getCurrency()
