@@ -11,8 +11,9 @@ async function getCurrency() {
   const currencies = [];
   for (let index = 0; index < 2; index++) {
     while (!(await validateCurrency(currencies[index]))) {
+      const question = index === 0 ? 'Converter: ' : 'Para: '
       const currency = readlineSync
-        .question(`Informe a ${index + 1}ª moeda a ser convertida: `)
+        .question(question)
         .toUpperCase();
       if (await validateCurrency(currency)) {
         currencies.push(currency);

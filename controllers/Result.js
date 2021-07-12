@@ -6,7 +6,7 @@ async function getResult(firstCurrency, secondCurrency, amount) {
   );
   const { data } = result;
   console.log(
-    `${amount} ${firstCurrency} igual a ${data.conversion_result.toFixed(
+    `${amount} ${firstCurrency} é equivalente a ${data.conversion_result.toFixed(
       2
     )} ${secondCurrency}`
   );
