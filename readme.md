@@ -60,8 +60,6 @@ Para obter as informações atualizadas das moedas, foi utilizado a API [Exchang
 
 Feito por Guilherme Macedo 👋🏽 Entre em contato!
 
-<br/>
-
 [![Twitter Badge](https://img.shields.io/badge/-@guigo5435-1ca0f1?style=flat-square&labelColor=1ca0f1&logo=twitter&logoColor=white&link=https://twitter.com/guigo5435)](https://twitter.com/guigo5435)
 
 [![Linkedin Badge](https://img.shields.io/badge/-Guilherme-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/guilherme-macedo-4a5b75202/)](https://www.linkedin.com/in/guilherme-macedo-4a5b75202/)
