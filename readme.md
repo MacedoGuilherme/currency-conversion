@@ -22,12 +22,12 @@ Antes de utilizar o conversor de moedas, é necessário instalar em sua máquina
 
 # Clone este repositório
 
-$ git clone https://github.com/MacedoGuilherme/get-currency-conversion.git
+$ git clone https://github.com/MacedoGuilherme/currency-conversion.git
 
 
 # Acesse a pasta do projeto no terminal/cmd
 
-$ cd get-currency-conversion
+$ cd currency-conversion
 
 
 # Instale as dependências
